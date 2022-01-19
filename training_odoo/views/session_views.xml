@@ -1,0 +1,244 @@
+<odoo>
+    <data>
+
+        <!-- Membuat View Tree/List Session -->
+
+        <record id="training_session_view_tree" model="ir.ui.view">
+            <field name="name">training.session.tree</field>
+            <field name="model">training.session</field>
+            <field name="arch" type="xml">
+                <tree string="session List" multi_edit="1" expand="1" default_order="start_date desc" delete="0" decoration-info="duration&lt;=5" decoration-danger="duration&gt;=15">
+                    <field name="course_id"/>
+                    <field name="name"/>
+                    <field name="partner_id" optional="show"/>
+                    <field name="start_date" string="Tanggal Mulai"/>
+                    <field name="end_date"/>
+                    <field name="duration" avg="Rata-Rata Durasi"/>
+                    <field name="seats" sum="Total Kursi"/>
+                    <field name="taken_seats" widget="progressbar" optional="hide"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Membuat View Form Session -->
+
+        <record id="training_session_view_form" model="ir.ui.view">
+            <field name="name">training.session.form</field>
+            <field name="model">training.session</field>
+            <field name="arch" type="xml">
+                <form string="Session Form">
+                    <header>
+                        <button name="action_print_session" type="object" string="Print Session" states="open" class="oe_highlight"/>
+                        <button name="action_confirm" type="object" string="Confirm" states="draft" class="btn-primary"/>
+                        <button name="action_cancel" type="object" string="Cancel" states="open"/>
+                        <button name="action_close" type="object" string="Close" states="open" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group string="Informasi">
+                                <field name="course_id" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                                <field name="name" placeholder="Contoh: Introduction"/>
+                                <field name="partner_id"/>
+                            </group>
+                            <group string="Jadwal">
+                                <field name="start_date" string="Tanggal Mulai"/>
+                                <field name="end_date"/>
+                                <field name="duration"/>
+                            </group>
+                        </group>
+                        <group col="4">
+                            <field name="seats"/>
+                            <field name="attendees_count"/>
+                            <field name="taken_seats" widget="progressbar" colspan="4"/>
+                        </group>
+                        <group string="Peserta">
+                            <field name="attendee_ids" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Membuat View Calendar Session -->
+
+        <record id="training_session_view_form_calendar" model="ir.ui.view">
+            <field name="name">training.session.calendar</field>
+            <field name="model">training.session</field>
+            <field name="arch" type="xml">
+                <calendar string="Session Calendar" date_start="start_date" date_stop="end_date" mode="month" color="partner_id" quick_add="False" event_open_popup="True">
+                    <field name="name" invisible="1"/>
+                    <field name="partner_id" filters="1"/>
+                    <field name="course_id" filters="1" color="color"/>
+                </calendar>
+            </field>
+        </record>
+
+        <!-- Membuat View Graph Session -->
+
+        <record id="training_session_view_graph" model="ir.ui.view">
+            <field name="name">training.session.graph</field>
+            <field name="model">training.session</field>
+            <field name="arch" type="xml">
+                <graph string="Session" sample="1" stacked="False" type="pie" order="desc">
+                    <field name="course_id"/>
+                    <field name="partner_id"/>
+                    <field name="start_date" interval="week"/>
+                    <field name="attendees_count" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Membuat View Pivot Session -->
+
+        <record id="training_session_pivot_view" model="ir.ui.view">
+            <field name="name">training.session.pivot</field>
+            <field name="model">training.session</field>
+            <field name="arch" type="xml">
+                <pivot string="Pivot" sample="1" disable_linking="True" display_quantity="true">
+                    <field name="start_date" type="row"/>
+                    <field name="course_id" type="col"/>
+                    <field name="attendees_count" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+
+        <!-- Membuat View Kanban Session -->
+
+        <record id="training_session_kanban_view" model="ir.ui.view">
+            <field name="name">training.session.kanban</field>
+            <field name="model">training.session</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="course_id" class="o_kanban_mobile" sample="1">
+                    <field name="course_id"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="duration"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="level"/>
+                    <field name="color"/>
+                    <field name="state"/>
+                    <field name="attendees_count"/>
+                    <progressbar field="state" colors='{"open": "success", "open": "warning", "draft": "danger"}' sum_field="attendees_count"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_card oe_kanban_global_click">
+                                <div class="o_dropdown_kanban dropdown">
+                                    <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                        <span class="fa fa-ellipsis-v"/>
+                                    </a>
+                                    <div class="dropdown-menu" role="menu">
+                                        <t t-if="widget.editable">
+                                            <a role="menuitem" type="edit" class="dropdown-item">Edit</a>
+                                        </t>
+                                        <t t-if="widget.deletable">
+                                            <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                        </t>
+                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                    </div>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <strong class="o_kanban_record_title">
+                                        <t t-if="record.name.raw_value">
+                                            <field name="name"/>
+                                        </t>
+                                    </strong>
+                                    <ul>
+                                        <li>
+                                            <t t-if="record.partner_id.raw_value">
+                                                <field name="partner_id"/>
+                                            </t>
+                                        </li>
+                                        <li>
+                                            <t t-if="record.duration.raw_value">
+                                                <field name="duration"/>
+                                            </t>
+                                        </li>
+                                    </ul>
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left text-muted">
+                                            <span>
+                                                <t t-esc="record.start_date.value"/>
+                                                    s/d
+                                                <t t-esc="record.end_date.value"/>
+                                            </span>
+                                        </div>
+                                        <div class="oe_kanban_bottom_right">
+                                            <field name="level" widget="label_selection" options="{'classes': {'basic': 'warning', 'advanced': 'success'}}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+
+        <!-- Membuat Action/Event Session -->
+
+        <record id="training_session_action" model="ir.actions.act_window">
+            <field name="name">Session</field>
+            <field name="res_model">training.session</field>
+            <field name="view_mode">tree,form,calendar,graph,pivot,kanban</field>
+        </record>
+
+        <!-- Membuat Menu Item Session -->
+
+        <menuitem id="menu_item_training_session" name="Session" parent="menu_bar_training_odoo" action="training_session_action"/>
+
+
+        <!-- Membuat View Tree/List Attendee -->
+
+        <record id="training_attendee_view_tree" model="ir.ui.view">
+            <field name="name">training.attendee.tree</field>
+            <field name="model">training.attendee</field>
+            <field name="arch" type="xml">
+                <tree string="Attendee List">
+                    <field name="name"/>
+                    <field name="sex"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Membuat View Form Attendee -->
+
+        <record id="training_attendee_view_form" model="ir.ui.view">
+            <field name="name">training.attendee.form</field>
+            <field name="model">training.attendee</field>
+            <field name="arch" type="xml">
+                <form string="Attendee Form">
+                    <sheet>
+                        <group col="4">
+                            <field name="name" colspan="4"/>
+                            <field name="sex" widget="radio"/>
+                            <field name="marital"/>
+                        </group>
+                        <group string="Sesi">
+                            <field name="session_ids" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Membuat Action/Event Attendee -->
+
+        <record id="training_attendee_action" model="ir.actions.act_window">
+            <field name="name">Attendee</field>
+            <field name="res_model">training.attendee</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <!-- Membuat Menu Item Attendee
+
+        <menuitem id="menu_item_training_attendee" name="Attendee" parent="menu_bar_configuration" action="training_attendee_action"/> -->
+
+    </data>
+</odoo>
+

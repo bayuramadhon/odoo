@@ -1,0 +1,17 @@
+<odoo>
+
+    <record id="view_account_payment_form" model="ir.ui.view">
+        <field name="name">account.payment.form.inherit.account_accountant</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="open_payment_matching_screen" type="object"
+                        string="Payment Matching" class="oe_stat_button" icon="fa-dollar"
+                        groups="account.group_account_user"
+                        attrs="{'invisible': [('is_reconciled', '=', True)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

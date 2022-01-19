@@ -1,0 +1,17 @@
+<odoo>
+
+
+
+    <menuitem id="menu_dashboard_travel_umroh" name="Travel Umroh"/>
+
+    <menuitem id="menu_bar_master_data" name="Master Data" parent="menu_dashboard_travel_umroh"/>
+
+    <!-- menu item paket produk -->
+    <menuitem id="menu_item_data_paket_produk" name="Paket Produk" parent="menu_bar_master_data" action="data_paket_produk_action"/>
+
+    <!-- menu item jamaah -->
+    <menuitem id="menu_item_data_jamaah" name="Jamaah" parent="menu_bar_master_data" action="data_jamaah_action"/>
+
+    <!-- menu item produk -->
+    <menuitem id="menu_item_data_produk" name="produk" parent="menu_bar_master_data" action="data_produk_action"/>
+</odoo>

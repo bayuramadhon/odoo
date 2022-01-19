@@ -1,0 +1,185 @@
+<odoo>
+  <data>
+
+    <record id="training_course_view_search" model="ir.ui.view">
+      <field name="name">training.course.search</field>
+      <field name="model">training.course</field>
+      <field name="arch" type="xml">
+        <search string="Search Course">
+          <field name="name" string="Kursus" filter_domain="['|', ('name', 'ilike', self), ('description', 'ilike', self)]"/>
+          <field name="user_id"/>
+          <filter name="my_courses" string="Kursus Saya" domain="[('user_id', '=', uid)]"/>
+          <group string="Group By">
+            <filter name="responsible" string="Penanggung Jawab" context="{'group_by': 'user_id'}"/>
+          </group>
+          <searchpanel>
+            <field name="level" icon="fa-signal" enable_counters="1"/>
+          </searchpanel>
+        </search>
+      </field>
+    </record>
+
+    <!-- Membuat View Tree/List Course -->
+
+    <record id="training_course_view_tree" model="ir.ui.view">
+      <field name="name">training.course.tree</field>
+      <field name="model">training.course</field>
+      <field name="arch" type="xml">
+        <tree string="Course List">
+          <field name="ref"/>
+          <field name="name"/>
+          <field name="user_id"/>
+          <field name="level"/>
+          <field name="description"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- Membuat View Form Course -->
+
+    <record id="training_course_view_form" model="ir.ui.view">
+      <field name="name">training.course.form</field>
+      <field name="model">training.course</field>
+      <field name="arch" type="xml">
+        <form string="Course Form">
+          <header>
+            <button name="action_print_course" type="object" string="Print Course" class="oe_highlight"/>
+          </header>
+          <sheet>
+            <div class="oe_title">
+              <h1>
+                <field name="ref"/>
+              </h1>
+            </div>
+            <group col="4" string="Informasi">
+              <field name="name"/>
+              <field name="color"/>
+              <field name="level" widget="radio"/>
+            </group>
+            <group>
+              <separator string="Koordinator"/>
+              <field name="user_id"/>
+              <separator string="Login"/>
+              <field name="email" password="1"/>
+            </group>
+            <notebook>
+              <page string="Sesi">
+                <group>
+                  <field name="session_line" mode="tree,kanban" nolabel="1">
+                    <tree string="Sesi" editable="top">
+                      <field name="name"/>
+                      <field name="partner_id"/>
+                      <field name="start_date"/>
+                      <field name="duration"/>
+                      <field name="seats"/>
+                      <field name="state"/>
+                    </tree>
+                    <form string='Sesi'>
+                      <group>
+                        <field name="name"/>
+                        <field name="partner_id"/>
+                        <field name="start_date"/>
+                        <field name="duration"/>
+                        <field name="seats"/>
+                      </group>
+                    </form>
+                  </field>
+                </group>
+              </page>
+              <page string="Cendera Mata">
+                <group>
+                  <field name="product_ids" nolabel="1"/>
+                </group>
+              </page>
+              <page string="Keterangan">
+                <group>
+                  <field name="description"/>
+                </group>
+              </page>
+            </notebook>
+          </sheet>
+          <div class="oe_chatter">
+            <field name="message_follower_ids"/>
+            <field name="activity_ids"/>
+            <field name="message_ids"/>
+          </div>
+        </form>
+      </field>
+    </record>
+
+    <!-- Membuat View Activity Session -->
+
+    <record id="training_course_view_activity" model="ir.ui.view">
+      <field name="name">training.course.activity</field>
+      <field name="model">training.course</field>
+      <field name="arch" type="xml">
+        <activity string="Course">
+          <field name="id"/>
+          <templates>
+            <div t-name="activity-box">
+              <div>
+                <field name="name" display="full"/>
+                <field name="user_id" muted="1" display="full"/>
+              </div>
+            </div>
+          </templates>
+        </activity>
+      </field>
+    </record>
+
+    <!-- Membuat Action/Event Course -->
+
+    <record id="training_course_action" model="ir.actions.act_window">
+      <field name="name">Training</field>
+      <field name="res_model">training.course</field>
+      <field name="view_mode">tree,form,activity</field>
+      <field name="help" type="html">
+        <P class="o_view_noContent_smilling_face">
+    Buatlah Kursus Pertamamu
+        </P>
+      </field>
+    </record>
+
+    <!-- Membuat navbar/subnavbar -->
+
+
+    <!-- <menuitem id="menu_dashboard_training_odoo" name="Training Odoo" web_icon="training_odoo,static/description/icon.png"/>
+
+    <menuitem id="menu_bar_training_odoo" name="Training" parent="menu_dashboard_training_odoo"/>
+
+    <menuitem id="menu_item_training_menu" name="Course" action="training_course_action" parent="menu_bar_training_odoo"/> -->
+    <!---->
+
+    <record id="data1" model="training.course">
+      <field name="name">pelatihan Odoo</field>
+      <field name="description">ini pelatihan odoo</field>
+    </record>
+    <record id="data_demo_course_1" model="training.course">
+      <field name="name">Technical</field>
+      <field name="description">Training technical memiliki tujuan agar user dapat membuat dan mengcustom modul ketika implementasi</field>
+    </record>
+
+    <record id="data_demo_course_2" model="training.course">
+      <field name="name">Functional</field>
+      <field name="description">Training technical memiliki tujuan agar user dapat mengoperasikan sistem seacara baik dan benar</field>
+    </record>
+
+    <record id="data_demo_course_3" model="training.course">
+      <field name="name">Python</field>
+      <!-- tidak ada tambahan description -->
+    </record>
+
+    <record id="mail_activity_data_penawaran" model="mail.activity.type">
+      <field name="name">Kirim Penawaran</field>
+      <field name="icon">fa-envelope</field>
+      <field name="res_model_id" ref="training_odoo.model_training_course"/>
+    </record>
+
+    <record id="mail_activity_data_harga" model="mail.activity.type">
+      <field name="name">Negosiasi Harga</field>
+      <field name="icon">fa-users</field>
+      <field name="res_model_id" ref="training_odoo.model_training_course"/>
+    </record>
+
+  </data>
+</odoo>

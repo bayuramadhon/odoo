@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+
+        <!-- action produk -->
+        <record id="data_produk_action" model="ir.actions.act_window">
+            <field name="name">produk</field>
+            <field name="res_model">produk.template</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+    </data>
+
+
+</odoo>

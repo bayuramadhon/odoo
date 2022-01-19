@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <menuitem id="menu_dashboard_training_odoo" name="Training Odoo" web_icon="training_odoo,static/description/icon.png"/>
+
+        <menuitem id="menu_bar_training_odoo" name="Training" parent="menu_dashboard_training_odoo"/>
+
+
+        <menuitem id="menu_item_training_session" name="Session" parent="menu_bar_training_odoo" action="training_session_action" sequence="2"/>
+        <menuitem id="menu_item_training_menu" name="Course" action="training_course_action" parent="menu_bar_training_odoo" sequence="1"/>
+
+        <!-- Membuat Menu Bar Configuration -->
+
+        <menuitem id="menu_bar_configuration" name="Configuration" parent="menu_dashboard_training_odoo"/>
+
+        <!-- Membuat Menu Item Instructor -->
+
+        <menuitem id="menu_item_training_instructor" name="Instructor" parent="menu_bar_configuration" action="training_instructor_action"/>
+
+        <!-- Membuat Menu Item Attendee -->
+
+        <menuitem id="menu_item_training_attendee" name="Attendee" parent="menu_bar_configuration" action="training_attendee_action"/>
+
+        <menuitem id="menu_item_training_wizard" name="Add Attendees" parent="menu_bar_training_odoo" action="training_wizard_menu_list_action"/>
+
+    </data>
+</odoo>
